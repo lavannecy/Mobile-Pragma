@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pragma — Стратегічний консалтинг</title>
+<style>
+  :root {
+    --bg: #111110;
+    --bg-dark: #0e0e0d;
+    --bg-card: #131311;
+    --bg-image: #1a1918;
+    --border: #2a2925;
+    --text: #e8e4dc;
+    --muted: #9e9a93;
+    --dim: #5a574f;
+    --font-serif: Georgia, 'Times New Roman', serif;
+    --font-sans: 'Arial', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-serif);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 48px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+  }
+
+  .logo {
+    font-size: 16px;
+    letter-spacing: 3px;
+    font-weight: 300;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .burger {
+    width: 26px;
+    height: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .burger span {
+    display: block;
+    height: 1.5px;
+    background: var(--text);
+    transition: all 0.3s;
+  }
+
+  /* ── MENU OVERLAY ── */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    padding: 60px 20px 40px;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .menu-overlay.open {
+    transform: translateX(0);
+  }
+
+  .menu-close {
+    position: absolute;
+    top: 14px; right: 20px;
+    font-size: 22px;
+    color: var(--text);
+    cursor: pointer;
+    background: none;
+    border: none;
+    line-height: 1;
+  }
+
+  .menu-item {
+    border-top: 1px solid var(--border);
+    padding: 22px 0;
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.2s;
+  }
+
+  .menu-item:last-child { border-bottom: 1px solid var(--border); }
+
+  .menu-item.active { color: var(--text); }
+  .menu-item:not(.active) { color: var(--muted); }
+
+  .menu-item .arrow { font-size: 16px; font-style: normal; color: var(--dim); }
+
+  .menu-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 24px;
+  }
+
+  /* ── PAGE ── */
+  .page { display: none; padding-top: 48px; }
+  .page.active { display: block; }
+
+  /* ── SECTIONS ── */
+  .section {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 20px;
+  }
+
+  .section-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 14px;
+  }
+
+  /* ── INDEX: HERO ── */
+  .hero {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 20px 24px;
+  }
+
+  .hero .label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .hero p {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .btn-ghost {
+    display: inline-block;
+    border: 1px solid var(--dim);
+    padding: 9px 22px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--text);
+    cursor: pointer;
+    background: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--text); }
+
+  .btn-ghost-wide {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--dim);
+    padding: 13px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--text);
+    text-align: center;
+    cursor: pointer;
+    background: none;
+    transition: border-color 0.2s;
+  }
+
+  .btn-ghost-wide:hover { border-color: var(--text); }
+
+  /* ── SLIDER ── */
+  .slider-section {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 20px;
+  }
+
+  .slider-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 14px;
+  }
+
+  .slide-card {
+    border: 1px solid var(--border);
+    padding: 16px 14px;
+    margin-bottom: 14px;
+  }
+
+  .slide-num {
+    font-size: 28px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--border);
+    margin-bottom: 8px;
+  }
+
+  .slide-title {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .slide-text {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .slider-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .slider-dots {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .dot {
+    width: 24px;
+    height: 2px;
+    background: var(--border);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .dot.active { background: var(--text); }
+
+  .slider-arrows {
+    display: flex;
+    gap: 16px;
+    font-size: 18px;
+    font-family: var(--font-sans);
+  }
+
+  .arrow-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dim);
+    font-size: 18px;
+    transition: color 0.2s;
+    padding: 0 4px;
+  }
+
+  .arrow-btn.active-arrow { color: var(--text); }
+
+  /* ── ABOUT ── */
+  .photo-placeholder {
+    height: 90px;
+    background: var(--bg-image);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-icon {
+    width: 44px;
+    height: 34px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 9px;
+    color: #3a3830;
+    letter-spacing: 1px;
+  }
+
+  /* ── SERVICES LIST ── */
+  .services-list { border-bottom: 1px solid var(--border); }
+
+  .service-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .service-row:hover { background: rgba(42,41,37,0.3); }
+
+  .service-num {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--border);
+    min-width: 20px;
+  }
+
+  .service-name {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .service-arrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+  /* ── CALCULATOR ── */
+  .calculator {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 20px;
+  }
+
+  .chips-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+
+  .chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .chip {
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: none;
+  }
+
+  .chip.selected {
+    border-color: var(--dim);
+    color: var(--text);
+  }
+
+  .range-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .range-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-sans);
+    font-size: 9px;
+    color: var(--dim);
+    margin-bottom: 18px;
+  }
+
+  .select-wrap {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    cursor: pointer;
+  }
+
+  .select-wrap select {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--muted);
+    width: 100%;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .select-caret {
+    font-size: 11px;
+    color: var(--dim);
+    pointer-events: none;
+  }
+
+  .calc-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  .result-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+
+  .result-price {
+    font-size: 40px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .result-sub {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    color: var(--dim);
+    margin-bottom: 16px;
+  }
+
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  /* ── SERVICES PAGE ── */
+  .page-hero {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 20px 24px;
+  }
+
+  .page-hero .label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 16px;
+  }
+
+  .page-hero h1 {
+    font-size: 30px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .page-hero p {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .service-card {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 20px;
+  }
+
+  .card-num {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .card-desc {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .card-items { border-top: 1px solid var(--border); }
+
+  .card-item {
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0 10px 8px;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    color: var(--dim);
+  }
+
+  /* ── PROCESS ── */
+  .process-section { padding: 24px 20px; border-bottom: 1px solid var(--border); }
+
+  .process-title {
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .process-step {
+    border-top: 1px solid var(--border);
+    padding: 14px 0 4px;
+  }
+
+  .step-num {
+    font-size: 30px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--border);
+    margin-bottom: 2px;
+  }
+
+  .step-title {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .step-desc {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    padding-bottom: 10px;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 20px;
+  }
+
+  .cta-title {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+
+  /* ── CONTACTS PAGE ── */
+  .contact-block {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+  }
+
+  .contact-block .label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 6px;
+  }
+
+  .contact-block .value {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .contact-block .value-muted {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .contact-block .hours {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── FORM ── */
+  .form-section { padding: 24px 20px; }
+
+  .form-group { margin-bottom: 20px; }
+
+  .form-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 4px 0 10px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input::placeholder { color: var(--muted); }
+  .form-input:focus { border-bottom-color: var(--dim); }
+
+  .form-select {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 4px 0 10px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--dim);
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .form-select option { background: var(--bg); color: var(--text); }
+
+  .form-select-wrap {
+    position: relative;
+  }
+
+  .form-select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 0;
+    top: 4px;
+    font-size: 11px;
+    color: var(--dim);
+    pointer-events: none;
+  }
+
+  .form-textarea {
+    width: 100%;
+    background: none;
+    border: 1px solid var(--border);
+    padding: 12px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+  }
+
+  .form-textarea::placeholder { color: #3a3830; }
+  .form-textarea:focus { border-color: var(--dim); }
+
+  .consent-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    margin-top: 4px;
+  }
+
+  .consent-row input[type=checkbox] {
+    margin-top: 2px;
+    width: 12px;
+    height: 12px;
+    accent-color: var(--dim);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .consent-row span {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    color: var(--dim);
+    line-height: 1.55;
+  }
+
+  /* ── MAP ── */
+  .map-section { padding: 20px 20px; border-bottom: 1px solid var(--border); }
+
+  .map-placeholder {
+    height: 110px;
+    background: var(--bg-image);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .map-pin {
+    width: 18px;
+    height: 22px;
+    border: 1.5px solid var(--dim);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    position: relative;
+  }
+
+  .map-pin::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 5px; height: 5px;
+    border: 1.5px solid var(--dim);
+    border-radius: 50%;
+  }
+
+  .map-address {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--dim);
+    text-align: center;
+  }
+
+  /* ── SOCIAL ── */
+  .social-section {
+    padding: 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .social-links {
+    display: flex;
+    gap: 24px;
+    margin-top: 12px;
+  }
+
+  .social-link {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .social-link:hover { color: var(--text); }
+
+  .social-link .ext { font-size: 10px; color: var(--dim); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg-dark);
+    border-top: 1px solid var(--border);
+    padding: 24px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    color: var(--dim);
+  }
+
+  /* ── CONTACT INFO in index ── */
+  .contact-section-index {
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contact-section-index .label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 16px;
+  }
+
+  .contact-section-index h2 {
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .contact-section-index p {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .contact-info-grid {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+
+  .info-row {
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+  }
+
+  .info-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-bottom: 3px;
+  }
+
+  .info-val {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── EMAIL BUTTON ── */
+  .email-btn {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--dim);
+    padding: 11px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--text);
+    text-align: center;
+    background: none;
+    cursor: pointer;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+  }
+
+  .email-btn:hover { border-color: var(--text); }
+
+  /* ── ACTIVE PAGE NAV INDICATOR ── */
+  .nav-page-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <span class="logo" onclick="goTo('index')">Pragma</span>
+  <span id="nav-label" class="nav-page-label"></span>
+  <div class="burger" onclick="openMenu()" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ── MENU OVERLAY ── -->
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" onclick="closeMenu()">✕</button>
+  <span class="menu-label">НАВІГАЦІЯ</span>
+  <div class="menu-item" id="mi-index" onclick="goTo('index')">
+    Головна <span class="arrow">→</span>
+  </div>
+  <div class="menu-item" id="mi-services" onclick="goTo('services')">
+    Послуги <span class="arrow">→</span>
+  </div>
+  <div class="menu-item" id="mi-contacts" onclick="goTo('contacts')">
+    Контакти <span class="arrow">→</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: INDEX
+══════════════════════════════════ -->
+<div class="page active" id="page-index">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="label">СТРАТЕГІЧНИЙ КОНСАЛТИНГ</div>
+    <h1>Ясність.<br>Стратегія.<br>Результат.</h1>
+    <p>Допомагаємо бізнесу рости осмислено —<br>без зайвого шуму.</p>
+    <button class="btn-ghost" onclick="goTo('contacts')">Поговорити</button>
+  </div>
+
+  <!-- SLIDER -->
+  <div class="slider-section">
+    <div class="slider-label">НАШІ ПЕРЕВАГИ</div>
+    <div id="slide-content">
+      <div class="slide-card">
+        <div class="slide-num" id="slide-num">01</div>
+        <div class="slide-title" id="slide-title">Досвід 20+ років</div>
+        <div class="slide-text" id="slide-text">Від аналітичного бюро до команди з 35 фахівців у сфері стратегії.</div>
+      </div>
+    </div>
+    <div class="slider-nav">
+      <div class="slider-dots" id="slider-dots">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+        <div class="dot" onclick="goSlide(2)"></div>
+        <div class="dot" onclick="goSlide(3)"></div>
+      </div>
+      <div class="slider-arrows">
+        <button class="arrow-btn" onclick="prevSlide()">←</button>
+        <button class="arrow-btn active-arrow" onclick="nextSlide()">→</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="photo-placeholder">
+    <div class="photo-icon">ФОТО</div>
+  </div>
+  <div class="section">
+    <div class="section-label">ПРО НАС</div>
+    <p style="font-family:var(--font-sans);font-size:15px;font-weight:300;color:var(--text);margin-bottom:8px;">Команда аналітиків і стратегів</p>
+    <p style="font-family:var(--font-sans);font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:16px;">Pragma заснована у 2004 році. За двадцять років — 35 фахівців.</p>
+    <button class="btn-ghost" onclick="goTo('services')">Дізнатися більше</button>
+  </div>
+
+  <!-- SERVICES PREVIEW -->
+  <div class="section" style="padding:16px 20px 0;">
+    <div class="section-label">ПОСЛУГИ</div>
+  </div>
+  <div class="services-list">
+    <div class="service-row" onclick="goTo('services')"><span class="service-num">01</span><span class="service-name">Стратегія зростання</span><span class="service-arrow">→</span></div>
+    <div class="service-row" onclick="goTo('services')"><span class="service-num">02</span><span class="service-name">Операційна ефективність</span><span class="service-arrow">→</span></div>
+    <div class="service-row" onclick="goTo('services')"><span class="service-num">03</span><span class="service-name">Фінансовий аналіз</span><span class="service-arrow">→</span></div>
+    <div class="service-row" onclick="goTo('services')"><span class="service-num">04</span><span class="service-name">Цифрова трансформація</span><span class="service-arrow">→</span></div>
+    <div class="service-row" onclick="goTo('services')"><span class="service-num">05</span><span class="service-name">Управління змінами</span><span class="service-arrow">→</span></div>
+    <div class="service-row" onclick="goTo('services')"><span class="service-num">06</span><span class="service-name">M&amp;A консультування</span><span class="service-arrow">→</span></div>
+  </div>
+
+  <!-- CALCULATOR -->
+  <div class="calculator">
+    <div class="section-label">РОЗРАХУНОК ВАРТОСТІ</div>
+
+    <div class="chips-label">ТИП ПОСЛУГИ</div>
+    <div class="chips-row" id="chips-service">
+      <button class="chip selected" data-group="service" data-val="strategy" onclick="selectChip(this)">Стратегія</button>
+      <button class="chip" data-group="service" data-val="ops" onclick="selectChip(this)">Операційна</button>
+      <button class="chip" data-group="service" data-val="finance" onclick="selectChip(this)">Фінанси</button>
+      <button class="chip" data-group="service" data-val="digital" onclick="selectChip(this)">Діджитал</button>
+    </div>
+
+    <div class="chips-label">РОЗМІР КОМПАНІЇ</div>
+    <div class="chips-row" id="chips-size">
+      <button class="chip selected" data-group="size" data-val="small" onclick="selectChip(this)">Малий (до 50)</button>
+      <button class="chip" data-group="size" data-val="mid" onclick="selectChip(this)">Середній (50–200)</button>
+      <button class="chip" data-group="size" data-val="large" onclick="selectChip(this)">Великий (200+)</button>
+    </div>
+
+    <div class="range-label" id="range-label">ТРИВАЛІСТЬ: 3 МІСЯЦІ</div>
+    <input type="range" min="1" max="12" value="3" id="duration-range" oninput="updateCalc()"/>
+    <div class="range-ticks"><span>1 міс.</span><span>6 міс.</span><span>12 міс.</span></div>
+
+    <div class="chips-label">ІНТЕНСИВНІСТЬ</div>
+    <div class="select-wrap">
+      <select id="intensity-select" onchange="updateCalc()">
+        <option value="1">Стандартна (часткова команда)</option>
+        <option value="1.4">Висока (повна команда)</option>
+        <option value="1.8">Максимальна (з залученням CEO)</option>
+      </select>
+      <span class="select-caret">▾</span>
+    </div>
+
+    <hr class="calc-divider"/>
+    <div class="result-label">ОРІЄНТОВНА ВАРТІСТЬ</div>
+    <div class="result-price" id="result-price">$18 000</div>
+    <div class="result-sub" id="result-sub">за 3 місяці · стандартна інтенсивність</div>
+    <div class="breakdown-row"><span>Базова вартість</span><span id="base-val">$15 000</span></div>
+    <div class="breakdown-row"><span>Додаткові опції</span><span id="extra-val">+$3 000</span></div>
+    <br/>
+    <button class="btn-ghost-wide" onclick="goTo('contacts')">Отримати точну пропозицію</button>
+  </div>
+
+  <!-- CONTACTS PREVIEW -->
+  <div class="contact-section-index">
+    <div class="label">КОНТАКТИ</div>
+    <h2>Готові до розмови?</h2>
+    <p>Напишіть — відповімо протягом одного робочого дня.</p>
+    <button class="email-btn" onclick="goTo('contacts')">hello@pragma.ua</button>
+    <div class="contact-info-grid">
+      <div class="info-row">
+        <div class="info-label">ТЕЛЕФОН</div>
+        <div class="info-val">+38 044 000 00 00</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">АДРЕСА</div>
+        <div class="info-val">Київ, вул. Хрещатик, 22</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2026 Pragma Consulting</span>
+    <span>Усі права захищено</span>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: SERVICES
+══════════════════════════════════ -->
+<div class="page" id="page-services">
+
+  <div class="page-hero">
+    <div class="label">НАШІ ПОСЛУГИ</div>
+    <h1>Що ми робимо</h1>
+    <p>Pragma надає повний спектр консалтингових послуг — від стратегії до цифрових рішень.</p>
+  </div>
+
+  <!-- Card 01 -->
+  <div class="service-card">
+    <div class="card-num">01</div>
+    <div class="card-title">Стратегічний консалтинг</div>
+    <div class="card-desc">Визначаємо вектор розвитку та конкурентну перевагу на ринку.</div>
+    <div class="card-items">
+      <div class="card-item">→&nbsp; Аналіз ринку та конкурентного середовища</div>
+      <div class="card-item">→&nbsp; Розробка довгострокового стратегічного плану</div>
+    </div>
+  </div>
+
+  <!-- Card 02 -->
+  <div class="service-card">
+    <div class="card-num">02</div>
+    <div class="card-title">Фінансовий консалтинг</div>
+    <div class="card-desc">Прозорість фінансової картини бізнесу та обґрунтовані інвестиційні рішення.</div>
+    <div class="card-items">
+      <div class="card-item">→&nbsp; Фінансове моделювання та прогнозування</div>
+      <div class="card-item">→&nbsp; Оцінка бізнесу та M&amp;A-консультації</div>
+    </div>
+  </div>
+
+  <!-- Card 03 -->
+  <div class="service-card">
+    <div class="card-num">03</div>
+    <div class="card-title">Цифрова трансформація</div>
+    <div class="card-desc">Від традиційних процесів до цифрових — без зупинки бізнесу.</div>
+    <div class="card-items">
+      <div class="card-item">→&nbsp; Аудит поточних процесів та ІТ-ландшафту</div>
+      <div class="card-item">→&nbsp; Розробка дорожньої карти трансформації</div>
+    </div>
+  </div>
+
+  <!-- Card 04 -->
+  <div class="service-card">
+    <div class="card-num">04</div>
+    <div class="card-title">Управління змінами</div>
+    <div class="card-desc">Організації проходять через трансформації, зберігаючи ефективність команди.</div>
+    <div class="card-items">
+      <div class="card-item">→&nbsp; Діагностика організаційної культури</div>
+      <div class="card-item">→&nbsp; Коучинг керівників та команд</div>
+    </div>
+  </div>
+
+  <!-- Card 05 -->
+  <div class="service-card">
+    <div class="card-num">05</div>
+    <div class="card-title">Операційна ефективність</div>
+    <div class="card-desc">Вузькі місця в операційній діяльності та рішення для зниження витрат.</div>
+    <div class="card-items">
+      <div class="card-item">→&nbsp; Впровадження Lean та Agile-підходів</div>
+    </div>
+  </div>
+
+  <!-- PROCESS -->
+  <div class="process-section">
+    <div class="section-label">ЯК МИ ПРАЦЮЄМО</div>
+    <div class="process-title">Чотири кроки до результату</div>
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-title">Діагностика</div>
+      <div class="step-desc">Занурюємось у бізнес клієнта: інтерв'ю, дані, ринок.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-title">Стратегія</div>
+      <div class="step-desc">Формуємо ясну картину та шлях розвитку.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <div class="step-title">Впровадження</div>
+      <div class="step-desc">Супроводжуємо реалізацію кожного кроку.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-title">Вимірювання</div>
+      <div class="step-desc">Фіксуємо результат у цифрах та KPI.</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-title">Готові обговорити<br>ваше завдання?</div>
+    <button class="btn-ghost" onclick="goTo('contacts')">Написати нам</button>
+  </div>
+
+  <footer>
+    <span>© 2026 Pragma Consulting</span>
+    <span>Усі права захищено</span>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: CONTACTS
+══════════════════════════════════ -->
+<div class="page" id="page-contacts">
+
+  <div class="page-hero">
+    <div class="label">КОНТАКТИ</div>
+    <h1>Поговоримо про<br>ваш бізнес</h1>
+    <p>Відповідаємо протягом одного робочого дня.</p>
+  </div>
+
+  <div class="contact-block">
+    <div class="label">EMAIL</div>
+    <div class="value">hello@pragma.ua</div>
+  </div>
+
+  <div class="contact-block">
+    <div class="label">ТЕЛЕФОН</div>
+    <div class="value">+38 (044) 123-45-67</div>
+  </div>
+
+  <div class="contact-block">
+    <div class="label">АДРЕСА</div>
+    <div class="value-muted">вул. Хрещатик, 22, офіс 5<br>Київ, 01001</div>
+  </div>
+
+  <div class="contact-block">
+    <div class="label">РОБОЧІ ГОДИНИ</div>
+    <div class="hours">Пн — Пт:&nbsp; 9:00 – 18:00<br>Сб — Нд:&nbsp; вихідний</div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-section">
+    <div class="section-label" style="margin-bottom:20px;">НАПИШІТЬ НАМ</div>
+
+    <div class="form-group">
+      <label class="form-label">ІМ'Я ТА ПРІЗВИЩЕ *</label>
+      <input class="form-input" type="text" placeholder="Іван Петренко"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">КОМПАНІЯ</label>
+      <input class="form-input" type="text" placeholder="ТОВ «Назва»"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">EMAIL *</label>
+      <input class="form-input" type="email" placeholder="ivan@company.ua"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">ТЕЛЕФОН</label>
+      <input class="form-input" type="tel" placeholder="+38 (050) 000-00-00"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">НАПРЯМ КОНСАЛТИНГУ</label>
+      <div class="form-select-wrap">
+        <select class="form-select">
+          <option value="" disabled selected>Оберіть послугу</option>
+          <option>Стратегічний консалтинг</option>
+          <option>Фінансовий консалтинг</option>
+          <option>Цифрова трансформація</option>
+          <option>Управління змінами</option>
+          <option>Операційна ефективність</option>
+          <option>M&amp;A консультування</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">ПОВІДОМЛЕННЯ *</label>
+      <textarea class="form-textarea" placeholder="Опишіть ваше завдання..."></textarea>
+    </div>
+
+    <div class="consent-row">
+      <input type="checkbox" id="consent"/>
+      <label for="consent"><span>Погоджуюсь з політикою конфіденційності та даю згоду на обробку персональних даних.</span></label>
+    </div>
+
+    <button class="btn-ghost-wide" onclick="submitForm()">Надіслати</button>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-section">
+    <div class="section-label">ДЕ ЗНАЙТИ НАС</div>
+    <div class="map-placeholder">
+      <div class="map-pin"></div>
+      <div class="map-address">вул. Хрещатик, 22 — Київ, 01001</div>
+    </div>
+  </div>
+
+  <!-- SOCIAL -->
+  <div class="social-section">
+    <div class="section-label">СОЦМЕРЕЖІ</div>
+    <div class="social-links">
+      <span class="social-link">LinkedIn <span class="ext">↗</span></span>
+      <span class="social-link">Facebook <span class="ext">↗</span></span>
+      <span class="social-link">Telegram <span class="ext">↗</span></span>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2026 Pragma Consulting</span>
+    <span>Усі права захищено</span>
+  </footer>
+</div>
+
+<!-- ══ JS ══ -->
+<script>
+  // ── PAGE NAV ──
+  const pages = ['index', 'services', 'contacts'];
+  const labels = { index: '', services: 'ПОСЛУГИ', contacts: 'КОНТАКТИ' };
+  let current = 'index';
+
+  function goTo(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.getElementById('nav-label').textContent = labels[id];
+    pages.forEach(p => {
+      const el = document.getElementById('mi-' + p);
+      if (el) el.classList.toggle('active', p === id);
+    });
+    current = id;
+    closeMenu();
+    window.scrollTo(0, 0);
+  }
+
+  // init menu active states
+  pages.forEach(p => {
+    const el = document.getElementById('mi-' + p);
+    if (el) el.classList.toggle('active', p === current);
+  });
+
+  function openMenu() {
+    document.getElementById('menuOverlay').classList.add('open');
+  }
+
+  function closeMenu() {
+    document.getElementById('menuOverlay').classList.remove('open');
+  }
+
+  // ── SLIDER ──
+  const slides = [
+    { num: '01', title: 'Досвід 20+ років', text: 'Від аналітичного бюро до команди з 35 фахівців у сфері стратегії.' },
+    { num: '02', title: 'Клієнти з 15 країн', text: 'Успішні проєкти від стартапів до публічних компаній на міжнародних ринках.' },
+    { num: '03', title: '250+ проєктів', text: 'Кожен проєкт — унікальне рішення, підкріплене глибокою аналітикою.' },
+    { num: '04', title: 'Гарантія результату', text: 'Супроводжуємо впровадження та відстежуємо ключові показники ефективності.' },
+  ];
+  let slideIdx = 0;
+
+  function renderSlide() {
+    const s = slides[slideIdx];
+    document.getElementById('slide-num').textContent = s.num;
+    document.getElementById('slide-title').textContent = s.title;
+    document.getElementById('slide-text').textContent = s.text;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === slideIdx));
+  }
+
+  function nextSlide() { slideIdx = (slideIdx + 1) % slides.length; renderSlide(); }
+  function prevSlide() { slideIdx = (slideIdx - 1 + slides.length) % slides.length; renderSlide(); }
+  function goSlide(i) { slideIdx = i; renderSlide(); }
+
+  // ── CALCULATOR ──
+  const basePrices = { strategy: 5000, ops: 4000, finance: 4500, digital: 5500 };
+  const sizeMultiplier = { small: 1, mid: 1.4, large: 2 };
+  const intensityLabels = { '1': 'стандартна інтенсивність', '1.4': 'висока інтенсивність', '1.8': 'максимальна інтенсивність' };
+
+  let selectedService = 'strategy';
+  let selectedSize = 'small';
+
+  function selectChip(el) {
+    const group = el.dataset.group;
+    document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    if (group === 'service') selectedService = el.dataset.val;
+    if (group === 'size') selectedSize = el.dataset.val;
+    updateCalc();
+  }
+
+  function updateCalc() {
+    const months = parseInt(document.getElementById('duration-range').value);
+    const intensity = parseFloat(document.getElementById('intensity-select').value);
+    const base = basePrices[selectedService] * sizeMultiplier[selectedSize] * months;
+    const extra = Math.round(base * 0.2);
+    const total = Math.round((base + extra) * intensity / 100) * 100;
+
+    document.getElementById('range-label').textContent = `ТРИВАЛІСТЬ: ${months} МІС${months === 1 ? 'ЯЦЬ' : months < 5 ? 'ЯЦІ' : 'ЯЦІВx'.replace('x','')}`;
+    document.getElementById('result-price').textContent = '$' + total.toLocaleString('uk-UA').replace(/\s/g, '\u00A0');
+    document.getElementById('result-sub').textContent = `за ${months} міс. · ${intensityLabels[String(intensity)]}`;
+    document.getElementById('base-val').textContent = '$' + Math.round(base).toLocaleString();
+    document.getElementById('extra-val').textContent = '+$' + Math.round(extra * intensity).toLocaleString();
+  }
+
+  // ── FORM SUBMIT ──
+  function submitForm() {
+    alert('Дякуємо! Ми зв\'яжемось з вами протягом одного робочого дня.');
+  }
+
+  // init
+  renderSlide();
+  updateCalc();
+</script>
+</body>
+</html>
